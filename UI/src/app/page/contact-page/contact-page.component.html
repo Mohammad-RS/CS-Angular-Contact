@@ -1,0 +1,16 @@
+<a *ngFor="let contact of contacts" routerLink="/phone/{{contact.id}}">
+    {{contact.fullname}}
+</a>
+
+<br><br>
+
+<form [formGroup]="addContactForm" (ngSubmit)="addContact()">
+    <label>Fullname:</label>
+    <input type="text" formControlName="fullname">
+    <label>Email:</label>
+    <input type="email" formControlName="email">
+    <label>Avatar:</label>
+    <input type="file" formControlName="avatar" (change)="show($event)">
+    <img [src]="url" height="120" width="120" [class.invisible]="url == ''">
+    <input type="submit" value="Add">
+</form>

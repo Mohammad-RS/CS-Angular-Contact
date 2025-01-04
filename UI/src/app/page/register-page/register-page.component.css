@@ -1,0 +1,90 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f9;
+    padding-top: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+form {
+    max-width: 400px;
+    width: 100%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 15px;
+    color: #333;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="file"]:focus {
+    border-color: #5cb85c;
+    outline: none;
+}
+
+input[type="file"] {
+    padding: 6px;
+    border: 1px solid #ccc;
+}
+
+img {
+    display: block;
+    margin: 10px auto;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.invisible {
+    display: none;
+}
+
+input[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+input[type="submit"]:hover {
+    background-color: #4cae4c;
+    transform: scale(1.05);
+}
+
+input[type="submit"]:active {
+    transform: scale(1);
+}

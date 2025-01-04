@@ -1,0 +1,114 @@
+CREATE DATABASE Contact
+USE Contact
+GO
+
+
+-- Tables -- 
+
+CREATE TABLE dbo.[User] (
+	Id INT NOT NULL IDENTITY PRIMARY KEY,
+	Username VARCHAR(50) NOT NULL UNIQUE,
+	Email VARCHAR(100) NOT NULL UNIQUE,
+	[Password] BINARY(16) NOT NULL,
+	Fullname NVARCHAR(50) NOT NULL,
+	Avatar VARCHAR(100),
+	Date_Created DATETIME DEFAULT GETDATE(),
+	Date_Modified DATETIME DEFAULT GETDATE(),
+	Is_Verified BIT NOT NULL DEFAULT 0,
+)
+CREATE UNIQUE INDEX idx_username ON dbo.[User] (Username)
+
+
+CREATE TABLE dbo.PhoneType (
+	Id TINYINT NOT NULL PRIMARY KEY,
+	Title VARCHAR(20),
+)
+INSERT INTO dbo.PhoneType VALUES
+(1, 'Home'), (2, 'Work'), (3, 'Mobile')
+
+
+CREATE TABLE dbo.Contact (
+	Id INT NOT NULL IDENTITY PRIMARY KEY,
+	UserId INT NOT NULL FOREIGN KEY REFERENCES dbo.[User](Id) ON DELETE CASCADE,
+	Email VARCHAR(100),
+	Fullname NVARCHAR(50) NOT NULL,
+	Note NVARCHAR(100),
+	Avatar VARCHAR(100),
+	Date_Of_Birth DATE,
+	Date_Created DATETIME DEFAULT GETDATE(),
+	Date_Modified DATETIME DEFAULT GETDATE(),
+)
+
+
+CREATE TABLE dbo.Phone (
+	Id INT NOT NULL IDENTITY PRIMARY KEY,
+	ContactId INT NOT NULL FOREIGN KEY REFERENCES dbo.Contact(Id) ON DELETE CASCADE,
+	PhoneTypeId TINYINT NOT NULL FOREIGN KEY REFERENCES dbo.PhoneType(Id),
+	Number VARCHAR(20) NOT NULL,
+)
+
+
+CREATE TABLE dbo.Favorite (
+	ContactId INT NOT NULL PRIMARY KEY FOREIGN KEY REFERENCES dbo.Contact(Id) ON DELETE CASCADE,
+)
+
+
+CREATE TABLE dbo.[Group] (
+	Id INT NOT NULL IDENTITY PRIMARY KEY,
+	UserId INT NOT NULL FOREIGN KEY REFERENCES dbo.[User](Id) ON DELETE CASCADE,
+    Title NVARCHAR(50) NOT NULL,
+	Avatar VARCHAR(100),
+)
+
+
+CREATE TABLE dbo.Membership (
+    GroupId INT NOT NULL FOREIGN KEY REFERENCES dbo.[Group](Id),
+    ContactId INT NOT NULL FOREIGN KEY REFERENCES dbo.Contact(Id),
+	PRIMARY KEY (GroupId, ContactId)
+)
+GO
+
+-- Triggers --
+
+CREATE TRIGGER UpdateUserDateModifiedTrigger
+ON dbo.[User]
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE dbo.[User]
+    SET Date_Modified = GETDATE()
+    WHERE Id IN (SELECT Id FROM inserted)
+END
+GO
+
+
+CREATE TRIGGER UpdateContactDateModifiedTrigger
+ON dbo.Contact
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE dbo.Contact
+    SET Date_Modified = GETDATE()
+    WHERE Id IN (SELECT Id FROM inserted)
+END
+GO
+
+
+CREATE TRIGGER DeleteContactTrigger
+ON dbo.Contact
+AFTER DELETE
+AS
+BEGIN
+    DELETE FROM dbo.Membership WHERE ContactId IN (SELECT Id FROM deleted);
+END
+GO
+
+
+CREATE TRIGGER DeleteGroupTrigger
+ON dbo.[Group]
+AFTER DELETE
+AS
+BEGIN
+    DELETE FROM dbo.Membership WHERE GroupId IN (SELECT Id FROM deleted);
+END
+GO

@@ -1,0 +1,19 @@
+@if (loading) {
+    <h2>Loading ...</h2>
+} @else {
+<div *ngFor="let phone of phones">
+    {{phoneTypes[phone.phoneTypeId-1].title}}: {{phone.number}}
+</div>
+}
+
+<br><br>
+
+<form [formGroup]="addPhoneForm" (ngSubmit)="addPhone()">
+    <label>Phone Type:</label>
+    <select formControlName="phoneTypeId">
+        <option *ngFor="let phoneType of phoneTypes" [value]="phoneType.id">{{phoneType.title}}</option>
+    </select>
+    <label>Number:</label>
+    <input type="text" formControlName="number">
+    <input type="submit" value="Add">
+</form>
