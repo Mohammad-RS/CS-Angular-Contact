@@ -53,6 +53,24 @@ namespace Contact.Controller
         }
 
         // ...
+        [HttpPost("add-group")]
+        public BusinessResult<bool> AddGroup(GroupTable request)
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.AddGroupBusiness(request, Id);
+        }
+
+        // ...
+        [HttpPost("add-group-contact")]
+        public BusinessResult<bool> AddGroupContact(MembershipTable request)
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.AddGroupContactBusiness(request, Id);
+        }
+
+        // ...
         [HttpPut("edit-contact")]
         public BusinessResult<bool> EditContact(ContactTable request)
         {
@@ -71,8 +89,26 @@ namespace Contact.Controller
         }
 
         // ...
+        [HttpPut("edit-group")]
+        public BusinessResult<bool> EditGroup(GroupTable request)
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.EditGroupBusiness(request, Id);
+        }
+
+        // ...
+        [HttpGet("get-phones")]
+        public BusinessResult<IEnumerable<PhoneTable>> GetPhones(int request)
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.GetPhonesBusiness(request, Id);
+        }
+
+        // ...
         [HttpGet("get-contact")]
-        public BusinessResult<ContactTable> GetContacts(int request)
+        public BusinessResult<ContactTable> GetContact(int request)
         {
             int Id = int.Parse(base.User.Identity.Name);
 
@@ -89,12 +125,30 @@ namespace Contact.Controller
         }
 
         // ...
-        [HttpGet("get-phones")]
-        public BusinessResult<IEnumerable<PhoneTable>> GetPhones(int request)
+        [HttpGet("get-favorite-contacts")]
+        public BusinessResult<IEnumerable<ContactTable>> GetFavoriteContacts(int request)
         {
             int Id = int.Parse(base.User.Identity.Name);
 
-            return contactBusiness.GetPhonesBusiness(request, Id);
+            return contactBusiness.GetFavoriteContactsBusiness(Id);
+        }
+
+        // ...
+        [HttpGet("get-group")]
+        public BusinessResult<IEnumerable<GroupTable>> GetGroup()
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.GetGroupsBusiness(Id);
+        }
+
+        // ...
+        [HttpGet("get-group-contacts")]
+        public BusinessResult<IEnumerable<ContactTable>> GetGroupContacts()
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.GetGroupContactsBusiness(Id);
         }
 
         // ...
@@ -122,6 +176,24 @@ namespace Contact.Controller
             int Id = int.Parse(base.User.Identity.Name);
 
             return contactBusiness.RemoveFavoriteBusiness(request, Id);
+        }
+
+        // ...
+        [HttpDelete("remove-group")]
+        public BusinessResult<bool> RemoveGroup(int request)
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.RemoveGroupBusiness(request, Id);
+        }
+
+        // ...
+        [HttpDelete("remove-group-contact")]
+        public BusinessResult<bool> RemoveGroupContact(int request)
+        {
+            int Id = int.Parse(base.User.Identity.Name);
+
+            return contactBusiness.RemoveGroupContactBusiness(request, Id);
         }
 
         // ...

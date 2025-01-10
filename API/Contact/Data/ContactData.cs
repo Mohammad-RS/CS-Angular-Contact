@@ -53,6 +53,18 @@ namespace Contact.Data
         }
 
         // ...
+        public void AddGroup(GroupTable group, int userId)
+        {
+            crud.Insert(group);
+        }
+
+        // ...
+        public void AddGroupContact(MembershipTable membership, int userId)
+        {
+            crud.Insert(membership);
+        }
+
+        // ...
         public void EditContact(ContactTable contact)
         {
             crud.UpdateById(contact);
@@ -62,6 +74,12 @@ namespace Contact.Data
         public void EditPhone(PhoneTable phone, int userId)
         {
             crud.UpdateById(phone);
+        }
+
+        // ...
+        public void EditGroup(GroupTable group, int userId)
+        {
+            crud.UpdateById(group);
         }
 
         // ...
@@ -105,6 +123,45 @@ namespace Contact.Data
         }
 
         // ...
+        public IEnumerable<ContactTable> GetFavoriteContacts(int userId)
+        {
+            try
+            {
+                return conn.Query<ContactTable>("SELECT * FROM dbo.Contact C JOIN dbo.Favorite F ON C.Id = F.ContactId WHERE C.UserId = @UserId", new { UserId = userId });
+            }
+            catch (Exception)
+            {
+                return Enumerable.Empty<ContactTable>();
+            }
+        }
+
+        // ...
+        public IEnumerable<GroupTable> GetGroups(int userId)
+        {
+            try
+            {
+                return conn.Query<GroupTable>("SELECT * FROM dbo.Group WHERE UserId = @UserId", new { UserId = userId });
+            }
+            catch (Exception)
+            {
+                return Enumerable.Empty<GroupTable>();
+            }
+        }
+
+        // ...
+        public IEnumerable<ContactTable> GetGroupContacts(int groupId)
+        {
+            try
+            {
+                return conn.Query<ContactTable>("SELECT * FROM dbo.Contact C LEFT JOIN dbo.Membership M ON C.Id = M.ContactId WHERE M.GroupId = @GroupId", new { GroupId = groupId });
+            }
+            catch (Exception)
+            {
+                return Enumerable.Empty<ContactTable>();
+            }
+        }
+
+        // ...
         public void RemoveContact(int contactId, int userId)
         {
             crud.DeleteById<ContactTable>(contactId);
@@ -121,5 +178,32 @@ namespace Contact.Data
         {
             conn.Execute("DELETE FROM dbo.Favorite WHERE ContactId = @ContactId", new { ContactId = contactId });
         }
+
+        // ...
+        public void RemoveGroup(int groupId, int userId)
+        {
+            using (var atomicTransaction = conn.BeginTransaction())
+            {
+                try
+                {
+                    conn.Execute("DELETE FROM dbo.Membership WHERE GroupId = @GroupId", new { GroupId = groupId });
+                    conn.Execute("DELETE FROM dbo.Group WHERE GroupId = @GroupId", new { GroupId = groupId });
+
+                    atomicTransaction.Commit();
+                }
+                catch (Exception)
+                {
+                    atomicTransaction.Rollback();
+                }
+            }
+        }
+
+        // ...
+        public void RemoveGroupContact(int contactId, int userId)
+        {
+            conn.Execute("DELETE FROM dbo.Membership WHERE ContactId = @ContactId", new { ContactId = contactId });
+        }
+
+        // ...
     }
 }

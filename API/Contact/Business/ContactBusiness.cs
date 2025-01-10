@@ -113,6 +113,44 @@ namespace Contact.Business
         }
 
         // ...
+        public BusinessResult<bool> AddGroupBusiness(GroupTable group, int userId)
+        {
+            BusinessResult<bool> result = new BusinessResult<bool>();
+
+            try
+            {
+                contactData.AddGroup(group, userId);
+
+                result.SetData(true);
+            }
+            catch (Exception)
+            {
+                result.SetError(500, "Something went wrong.");
+            }
+
+            return result;
+        }
+
+        // ...
+        public BusinessResult<bool> AddGroupContactBusiness(MembershipTable membership, int userId)
+        {
+            BusinessResult<bool> result = new BusinessResult<bool>();
+
+            try
+            {
+                contactData.AddGroupContact(membership, userId);
+
+                result.SetData(true);
+            }
+            catch (Exception)
+            {
+                result.SetError(500, "Something went wrong.");
+            }
+
+            return result;
+        }
+
+        // ...
         public BusinessResult<bool> EditContactBusiness(ContactTable contact)
         {
             BusinessResult<bool> result = new BusinessResult<bool>();
@@ -153,6 +191,25 @@ namespace Contact.Business
         }
 
         // ...
+        public BusinessResult<bool> EditGroupBusiness(GroupTable group, int userId)
+        {
+            BusinessResult<bool> result = new BusinessResult<bool>();
+
+            try
+            {
+                contactData.EditGroup(group, userId);
+
+                result.SetData(true);
+            }
+            catch (Exception)
+            {
+                result.SetError(500, "Something went wrong.");
+            }
+
+            return result;
+        }
+
+        // ...
         public BusinessResult<IEnumerable<PhoneTable>> GetPhonesBusiness(int contactId, int userId)
         {
             BusinessResult<IEnumerable<PhoneTable>> result = new BusinessResult<IEnumerable<PhoneTable>>();
@@ -162,7 +219,7 @@ namespace Contact.Business
 
             if (!phones.Any())
             {
-                result.SetError(500, "Something went wrong.");
+                result.SetError(404, "Not found.");
             }
             else
             {
@@ -182,7 +239,7 @@ namespace Contact.Business
 
             if (contact.Id == 0)
             {
-                result.SetError(500, "Something went wrong.");
+                result.SetError(404, "Not found.");
             }
             else
             {
@@ -208,7 +265,64 @@ namespace Contact.Business
 
             if (!contacts.Any())
             {
-                result.SetError(500, "Something went wrong.");
+                result.SetError(404, "Not found.");
+            }
+            else
+            {
+                result.SetData(contacts);
+            }
+
+            return result;
+        }
+
+        // ...
+        public BusinessResult<IEnumerable<ContactTable>> GetFavoriteContactsBusiness(int userId)
+        {
+            BusinessResult<IEnumerable<ContactTable>> result = new BusinessResult<IEnumerable<ContactTable>>();
+
+            IEnumerable<ContactTable> contacts = contactData.GetFavoriteContacts(userId);
+
+            if (!contacts.Any())
+            {
+                result.SetError(404, "Not found.");
+            }
+            else
+            {
+                result.SetData(contacts);
+            }
+
+            return result;
+        }
+
+        // ... 
+        public BusinessResult<IEnumerable<GroupTable>> GetGroupsBusiness(int userId)
+        {
+            BusinessResult<IEnumerable<GroupTable>> result = new BusinessResult<IEnumerable<GroupTable>>();
+
+            IEnumerable<GroupTable> groups = contactData.GetGroups(userId);
+
+            if (!groups.Any())
+            {
+                result.SetError(404, "Not found.");
+            }
+            else
+            {
+                result.SetData(groups);
+            }
+
+            return result;
+        }
+
+        // ...
+        public BusinessResult<IEnumerable<ContactTable>> GetGroupContactsBusiness(int userId)
+        {
+            BusinessResult<IEnumerable<ContactTable>> result = new BusinessResult<IEnumerable<ContactTable>>();
+
+            IEnumerable<ContactTable> contacts = contactData.GetGroupContacts(userId);
+
+            if (!contacts.Any())
+            {
+                result.SetError(404, "Not found.");
             }
             else
             {
@@ -267,6 +381,44 @@ namespace Contact.Business
             try
             {
                 contactData.RemoveFavorite(contactId, userId);
+
+                result.SetData(true);
+            }
+            catch (Exception)
+            {
+                result.SetError(500, "Something went wrong.");
+            }
+
+            return result;
+        }
+
+        // ...
+        public BusinessResult<bool> RemoveGroupBusiness(int groupId, int userId)
+        { 
+            BusinessResult<bool> result = new BusinessResult<bool>();
+
+            try
+            {
+                contactData.RemoveGroup(groupId, userId);
+
+                result.SetData(true);
+            }
+            catch (Exception)
+            {
+                result.SetError(500, "Something went wrong.");
+            }
+
+            return result;
+        }
+
+        // ...
+        public BusinessResult<bool> RemoveGroupContactBusiness(int contactId, int userId)
+        {
+            BusinessResult<bool> result = new BusinessResult<bool>();
+
+            try
+            {
+                contactData.RemoveGroupContact(contactId, userId);
 
                 result.SetData(true);
             }
