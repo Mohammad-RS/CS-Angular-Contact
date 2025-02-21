@@ -138,7 +138,7 @@ namespace Contact.Business
             int Id = userData.GetUserId(loginModel.Username, hashedPW);
 
 
-            if (Id == -1)
+            if (Id == 0)
             {
                 result.SetError(404, "Incorrect username or password.");
             }
@@ -146,7 +146,7 @@ namespace Contact.Business
             {
                 result.SetData(Id);
             }
-
+            
             return result;
         }
 

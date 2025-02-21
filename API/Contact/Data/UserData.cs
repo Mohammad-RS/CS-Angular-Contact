@@ -38,14 +38,7 @@ namespace Contact.Data
         {
             string query = "SELECT Id FROM dbo.[User] WHERE Username = @Username AND Password = @Password";
 
-            try
-            {
-                return conn.ExecuteScalar<int>(query, new { Username = username, Password = password });
-            }
-            catch (Exception)
-            {
-                return -1;
-            }
+            return conn.ExecuteScalar<int>(query, new { Username = username, Password = password });
         }
 
         // ...
